@@ -113,21 +113,12 @@
         transform: scale(0.98);
       }
 
-      .form-footer {
+      .success-message {
+        margin-top: 1rem;
+        font-size: 0.95rem;
+        color: #2e7d32;
         text-align: center;
-        margin-top: 1.5rem;
-        font-size: 0.85rem;
-        color: #666;
-      }
-
-      .form-footer a {
-        color: #1c5fa8;
-        text-decoration: none;
-        font-weight: 600;
-      }
-
-      .form-footer a:hover {
-        text-decoration: underline;
+        display: none;
       }
     </style>
   </head>
@@ -136,6 +127,7 @@
     <div class="form-container">
       <h2>Contact Form</h2>
       <form
+        id="contactForm"
         action="https://mon.app.n8n.cloud/webhook-test/anotherTesting"
         method="post"
       >
@@ -170,7 +162,36 @@
           ></textarea>
         </div>
         <button type="submit" class="submit-btn">Send Message</button>
+        <div class="success-message" id="successMessage">
+          ✅ Your message has been sent successfully!
+        </div>
       </form>
     </div>
+    <script>
+      const form = document.getElementById("contactForm");
+      const successMessage = document.getElementById("successMessage");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault(); // Stop page reload
+
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch(form.action, {
+            method: form.method,
+            body: formData,
+          });
+
+          if (response.ok) {
+            successMessage.style.display = "block";
+            form.reset();
+          } else {
+            alert("❌ Something went wrong. Please try again.");
+          }
+        } catch (error) {
+          alert("❌ Network error. Please check your connection.");
+        }
+      });
+    </script>
   </body>
 </html>
